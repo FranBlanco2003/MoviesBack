@@ -24,6 +24,7 @@ public class MovieService {
     public Movie searchByName(String name) {
         String encodedName = UriUtils.encode(name, StandardCharsets.UTF_8);
         String url = String.format("http://www.omdbapi.com/?apikey=%s&t=%s", apiKey, encodedName);
+        System.out.println("Request URL: " + url);
         return restTemplate.getForObject(url, Movie.class);
     }
 
