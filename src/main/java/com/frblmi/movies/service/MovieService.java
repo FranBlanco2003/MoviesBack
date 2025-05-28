@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriUtils;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class MovieService {
@@ -19,9 +22,10 @@ public class MovieService {
     }
 
     public Movie searchByName(String name) {
-        String url = String.format("http://www.omdbapi.com/?apikey=" + apiKey + "&t=" + name);
-        System.out.println("Requesting movie data from URL: " + url);
+        String encodedName = UriUtils.encode(name, StandardCharsets.UTF_8);
+        String url = String.format("http://www.omdbapi.com/?apikey=%s&t=%s", apiKey, encodedName);
         return restTemplate.getForObject(url, Movie.class);
     }
+
 
 }
