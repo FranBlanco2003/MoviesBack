@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Movie {
+public class MovieDto {
 
     @JsonProperty("Title")
     private String title;
@@ -16,18 +16,12 @@ public class Movie {
     @JsonProperty("Year")
     private String year;
 
-    @JsonProperty("imdbID")
-    private String imdbID;
-
-    @JsonProperty("imdbRating")
-    private String imdbRating;
-
-    @JsonProperty("Director")
-    private String director;
+    @JsonProperty("Type")
+    private String type;
 
     @JsonProperty("Poster")
     private String poster;
-
-    @JsonProperty("Plot")
-    private String plot;
 }
+
+
+

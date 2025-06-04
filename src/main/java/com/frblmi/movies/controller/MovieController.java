@@ -1,12 +1,15 @@
 package com.frblmi.movies.controller;
 
-import com.frblmi.movies.model.Movie;
+import com.frblmi.movies.model.MovieDto;
+import com.frblmi.movies.model.MovieTitleDto;
 import com.frblmi.movies.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -19,9 +22,19 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<Movie> getMovieByName(@RequestParam("name") String name) {
-        Movie movie = movieService.searchByName(name);
-        return name != null ? ResponseEntity.ok(movie) : ResponseEntity.notFound().build();
+    public ResponseEntity<List<MovieTitleDto>> getAllMoviesByName(@RequestParam String name) {
+        var movies = movieService.getAllMoviesByName(name);
+        if (movies.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(movies);
     }
+
+    @GetMapping("/id")
+    public ResponseEntity<MovieDto> getMovieById(@RequestParam String id) {
+        var movie = movieService.getMovieById(id);
+        return ResponseEntity.ok(movie);
+    }
+
 
 }
