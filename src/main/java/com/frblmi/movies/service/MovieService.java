@@ -5,6 +5,7 @@ import com.frblmi.movies.model.MovieDto;
 import com.frblmi.movies.model.MovieListResponse;
 import com.frblmi.movies.model.MovieTitleDto;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -23,6 +24,7 @@ public class MovieService {
         this.apiKey = apiKey;
     }
 
+    @Cacheable(value = "movies", key = "#name")
     public List<MovieTitleDto> getAllMoviesByName(String name) {
         String encodedName = UriUtils.encode(name, StandardCharsets.UTF_8);
         MovieListResponse response = omdbClient.searchMoviesByTitle(apiKey, encodedName);
@@ -33,6 +35,7 @@ public class MovieService {
         }
     }
 
+    @Cacheable(value = "movie", key = "#id")
     public MovieDto getMovieById(String id) {
         String encodedId = UriUtils.encode(id, StandardCharsets.UTF_8);
         MovieDto movie = omdbClient.getMovieById(apiKey, encodedId);

@@ -22,18 +22,12 @@ public class MovieController {
 
     @GetMapping
     public List<MovieTitleDto> getAllMoviesByName(@RequestParam String name) {
-        var movies = movieService.getAllMoviesByName(name);
-        if (movies.isEmpty()) {
-            throw new RuntimeException("No movies found with the name: " + name);
-        }
-        return movies;
+        return movieService.getAllMoviesByName(name);
     }
 
     @GetMapping("/id")
     public MovieDto getMovieById(@RequestParam String id) {
         return movieService.getMovieById(id);
     }
-
-
 
 }
