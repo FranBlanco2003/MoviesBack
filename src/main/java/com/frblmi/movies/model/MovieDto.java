@@ -13,11 +13,14 @@ public class MovieDto {
     @JsonProperty("Title")
     private String title;
 
-    @JsonProperty("Year")
-    private String year;
+    @JsonProperty("Released")
+    private String released;
 
-    @JsonProperty("Type")
-    private String type;
+    @JsonProperty("Language")
+    private String language;
+
+    @JsonProperty("Plot")
+    private String plot;
 
     @JsonProperty("Poster")
     private String poster;
