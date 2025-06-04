@@ -1,49 +1,46 @@
 package com.frblmi.movies.service;
 
+import com.frblmi.movies.client.OmdbClient;
 import com.frblmi.movies.model.MovieDto;
 import com.frblmi.movies.model.MovieListResponse;
 import com.frblmi.movies.model.MovieTitleDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+
 @Service
 public class MovieService {
 
-    private final RestTemplate restTemplate;
+    private final OmdbClient omdbClient;
+    private final String apiKey;
 
-    @Value("${api.key}")
-    private String apiKey;
-
-    public MovieService(RestTemplateBuilder builder) {
-        this.restTemplate = builder.build();
+    public MovieService(OmdbClient omdbClient, @Value("${api.key}") String apiKey) {
+        this.omdbClient = omdbClient;
+        this.apiKey = apiKey;
     }
 
     public List<MovieTitleDto> getAllMoviesByName(String name) {
         String encodedName = UriUtils.encode(name, StandardCharsets.UTF_8);
-        String url = String.format("http://www.omdbapi.com/?apikey=%s&s=%s", apiKey, encodedName);
-        System.out.println("Request URL: " + url);
-
-        MovieListResponse response = restTemplate.getForObject(url, MovieListResponse.class);
-
+        MovieListResponse response = omdbClient.searchMoviesByTitle(apiKey, encodedName);
         if (response != null && "True".equalsIgnoreCase(response.getResponse())) {
             return response.getMovies();
         } else {
-            System.out.println("Error from API: " + (response != null ? response.getError() : "null response"));
-            return List.of(); // vacío si falla
+            throw new RuntimeException("No movies found with the name: " + name);
         }
     }
 
-
     public MovieDto getMovieById(String id) {
         String encodedId = UriUtils.encode(id, StandardCharsets.UTF_8);
-        String url = String.format("http://www.omdbapi.com/?apikey=%s&i=%s", apiKey, encodedId);
-        System.out.println("Request URL: " + url);
-        return restTemplate.getForObject(url, MovieDto.class);
+        MovieDto movie = omdbClient.getMovieById(apiKey, encodedId);
+        if (movie != null) {
+            return movie;
+        } else {
+            throw new RuntimeException("No movie found with the ID: " + id);
+        }
     }
 }
+

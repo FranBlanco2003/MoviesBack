@@ -3,7 +3,6 @@ package com.frblmi.movies.controller;
 import com.frblmi.movies.model.MovieDto;
 import com.frblmi.movies.model.MovieTitleDto;
 import com.frblmi.movies.service.MovieService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,19 +21,19 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieTitleDto>> getAllMoviesByName(@RequestParam String name) {
+    public List<MovieTitleDto> getAllMoviesByName(@RequestParam String name) {
         var movies = movieService.getAllMoviesByName(name);
         if (movies.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("No movies found with the name: " + name);
         }
-        return ResponseEntity.ok(movies);
+        return movies;
     }
 
     @GetMapping("/id")
-    public ResponseEntity<MovieDto> getMovieById(@RequestParam String id) {
-        var movie = movieService.getMovieById(id);
-        return ResponseEntity.ok(movie);
+    public MovieDto getMovieById(@RequestParam String id) {
+        return movieService.getMovieById(id);
     }
+
 
 
 }

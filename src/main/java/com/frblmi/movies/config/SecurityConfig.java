@@ -20,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/movies/**").permitAll()  // Por ahora, permitimos acceso sin autenticación
+                        .requestMatchers("/api/movies/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -31,8 +31,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("usuario")
-                .password("{noop}clave123") // No codificada
+        UserDetails user = User.withUsername("user")
+                .password("{noop}user")
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(user);
