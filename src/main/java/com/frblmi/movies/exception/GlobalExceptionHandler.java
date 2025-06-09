@@ -21,14 +21,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(org.springframework.web.client.HttpClientErrorException.class)
-    public ResponseEntity<Object> handleHttpClientError(org.springframework.web.client.HttpClientErrorException ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("error", "Error al consumir API externa");
+        body.put("error", "Error de ejecución");
         body.put("message", ex.getMessage());
 
-        return new ResponseEntity<>(body, ex.getStatusCode());
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
