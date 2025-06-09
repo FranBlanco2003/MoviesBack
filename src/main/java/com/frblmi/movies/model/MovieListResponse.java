@@ -19,4 +19,13 @@ public class MovieListResponse {
 
     @JsonProperty("Error")
     private String error;
+
+    public List<MovieTitleDto> getMovies() {
+        return movies;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
 }
